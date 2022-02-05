@@ -1,7 +1,7 @@
 Application\website\_pycache_
 /sqlite3.exe
 /venv
-/__pycache__
+Application\website\__pycache__
 scheduler.db
 Application\website\model.py
 Application\website\modeltest.py
