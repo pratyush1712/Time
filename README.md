@@ -19,4 +19,4 @@
 
 deployed on ("https://timebite.herokuapp.com/")
 
-[![Watch the video](https://i.imgur.com/vKb2F1B.png)](https://drive.google.com/file/d/1GveotFvEWfppnT9a7DG0Ar7NN-1whxPz/view?usp=sharing)
+[![Watch the video](https://imgur.com/WFqVdiK.png)](https://drive.google.com/file/d/1GveotFvEWfppnT9a7DG0Ar7NN-1whxPz/view?usp=sharing)
