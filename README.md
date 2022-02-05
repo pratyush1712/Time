@@ -1,5 +1,5 @@
-[![Watch the video](https://imgur.com/WFqVdiK.png)](https://drive.google.com/file/d/1GveotFvEWfppnT9a7DG0Ar7NN-1whxPz/view?usp=sharing)
-###click on the image to view a demo
+[![Watch the video](https://imgur.com/WFqVdiK.png)](https://drive.google.com/file/d/1GveotFvEWfppnT9a7DG0Ar7NN-1whxPz/view?usp=sharing)<br>
+click on the image to view a demo
 ### Overview ###
 - The application automates time management and schedule making for the user based on their prefered work habits.
 - It asks user for their prefered study/work time and the number of hours they can spend working without losing focus.
