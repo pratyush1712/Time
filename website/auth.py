@@ -51,10 +51,9 @@ def sign_up():
             flash('Email already exists.', category='error')
         else:
             new_user = User(email=email, name=first_name, password=generate_password_hash(
-                password1, method='sha256'), maxFocusTime=maxFocusTime, preferedWorkTime=preferedWorkTime)
+                password1, method='sha256'), maxFocusTime=maxFocusTime, preferedWorkTime = (1 if preferedWorkTime=='night' else 0))
             db.session.add(new_user)
             db.session.commit()
-            print(new_user.serialize())
             login_user(new_user, remember=True)
             flash('Account created!', category='success')
             return redirect(url_for('views.init', email=email))

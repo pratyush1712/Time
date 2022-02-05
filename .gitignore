@@ -2,4 +2,6 @@
 /venv
 /__pycache__
 scheduler.db
+Application\website\model.py
+Application\website\modeltest.py
 client_id.json
