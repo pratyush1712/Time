@@ -64,10 +64,7 @@ def timebreak(startTime, endTime, user):
     # calculate the number of blocks required
     secDiff = (endTime-startTime).total_seconds()
     minuteDiff = secDiff/60
-    print(minuteDiff)
-    print(user.maxFocusTime*60)
     numBlocks = int(minuteDiff//(user.maxFocusTime*60))
-    print(numBlocks)
     # create Timeslot objects
     index = 0
     for block in range(numBlocks):
@@ -85,13 +82,12 @@ def timebreak(startTime, endTime, user):
             db.session.add(slot)
             db.session.commit()
             index = 0
-    print(resp)
     return resp
 
 @views.route("/")
 @login_required
 def init():
-    return render_template("home.html",email=current_user.email)
+    return render_template("home.html",email=current_user.email, name=current_user.name)
 
 @views.route("/<email>", methods=['GET','POST'])
 @login_required
