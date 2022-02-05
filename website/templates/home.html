@@ -17,7 +17,7 @@
         <br>
         <section class='home'>
             <h2>Your todo list and available times:</h2><br>
-            {{ email }}
+            Hey, {{ name }}
             <h3><a href="{{ url_for('views.assignment', email = email) }}" target="_blank">Your todo list</a></h3><br>
             <h3><a href="{{ url_for('views.timeslots', email=email) }}" target="_blank">Available Timeslots</a></h3><br>
             <h2>Added everything? Click <a href="{{ url_for('views.run_algo', email=email) }}" target="_blank">here</a> to build your schedule</h2>
