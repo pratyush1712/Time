@@ -1,0 +1,6 @@
+version: "3"
+services:    
+    demo:        
+        image: "ps1242/timebite"
+        ports:                
+            - "5000:5000" 

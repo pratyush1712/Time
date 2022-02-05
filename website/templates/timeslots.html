@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf8">
+        <meta name="viewport" content="width=device-width, initial-scales=1.0" />
+        <title>Timeslots</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    </head>
+    <body>
+        <header>
+            <h1>Your available timeslots</h1>
+        </header>
+        <section class="container">
+            <form id ="my-form" method='post'>
+                <h1>Tell us when you are free</h1>
+                <div class="msg"></div>
+                <div>
+                    <label for="startTime">Start Time: </label>
+                    <input type = "datetime-local" required="required" name="startTime" placeholder="Startime">
+                </div>
+                <div>
+                    <label for="endTime">End Time:</label>
+                    <input type="datetime-local" required="required" name="endTime" placeholder="Endtime">            
+                  </div>
+                <input class="btn" type="submit" value="Add">
+                done? click <a href="/api/run" target="_blank">here</a> to generate your schedule!!
+            </form>
+            
+        </section>
+        
+        
+        <section class="list">
+            <h1>List of Pomodoro sessions:</h1>
+            <ul>
+                {%for slots in data %}
+                <li>
+                    <div>
+                        <h4>Start Time:</h4>{{ slots["startTime"] }}
+                    </div>
+                    <div>
+                        <h4>End Time:</h4>{{ slots["endTime"] }}
+                    </div>
+                    <div>
+                        <h4>Assignment Number:</h4>{{ slots["assignment"] }}
+                    </div>
+                {% endfor %}
+                </li>
+            </ul>
+        </section>        
+    </body>
+</html>

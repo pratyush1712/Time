@@ -1,0 +1,31 @@
+<head>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<header>
+  <h1 align="center">Login</h1>
+</header>          
+<section class="home">
+  <form id ="my-form" method="POST">
+    <div class="msg" align="center">
+      <label for="email"><h3>Email Address</h3></label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="Enter email"
+      />
+    </div>
+    <div class="msg" align="center">
+      <label for="password"><h3>Password</h3></label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder="Enter password"
+      />
+    </div>
+    <br />
+    <button width= "50" type="submit" class="btn">Login</button>
+    <a id="signUp" href="/sign-up">Sign Up</a>
+  </form>
+</section>

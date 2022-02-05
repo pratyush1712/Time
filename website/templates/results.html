@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf8">
+        <meta name="viewport" content="width=device-width, initial-scales=1.0" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+        <title>
+            Results
+        </title>
+    </head>
+    <body>
+        <section class="results">
+            <h1>Results</h1>
+            <ul>
+                {% for assign in data %}
+                <li class='myDiv'>
+                    <h2><div class='myDiv'>{{ assign["name"] }}</div></h2>
+                    <div class="hide">
+                        <ul>
+                            {% for slots in assign["timeslots"] %}
+                            <li>
+                                <div id="slots">
+                                    from <b>{{ slots["startTime"].split(' ')[1][:5] }}</b> to <b>{{ slots["endTime"].split(' ')[1][:5] }}</b> on <b>{{ slots["startTime"].split(' ')[0] }}</b>
+                                </div>
+                                {% endfor %}
+                            </li>
+                            <li></li>
+                        </ul>
+                    </div>
+                    {% endfor %}
+                </li>
+            </ul>
+        </section>
+    </body>
+</html>

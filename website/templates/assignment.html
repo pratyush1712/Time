@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf8">
+        <meta name="viewport" content="width=device-width, initial-scales=1.0" />
+        <title>Assignments</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    </head>
+    <body>
+        <header>
+            <h1>Your todo list</h1>
+        </header>
+        <section class="container">
+            <form id ="my-form" method='post'>
+                <h1>Add an assignment</h1>
+                <div class="msg"></div>
+                <div>
+                    <label for="name">Assignment: </label>
+                    <input required="required" type="text" id="name" name="name">
+                </div>
+                <div>
+                    <label for="duedate">Duedate:</label>
+                    <input type="datetime-local" id="duedate" required="required" placeholder="duedate" name="duedate">
+                  </div>
+                <div>
+                    <label for="amtoftime">How much time will it take (in hh:mm format):</label>
+                    <input type="text" name="amount of time" pattern="([01]?[0-9]{1}|2[0-3]{1}):[0-5]{1}[0-9]{1}" required="required" placeholder="in hh:mm format">
+                <div>
+                    <label for="priority">Priority on a scale of 1-10</label>
+                    <input type="number" name="priority" required="required">
+                </div>
+                <input class="btn" type="submit" value="Add">
+                done? click <a href="{{ url_for('views.timeslots', email=email) }}" target="_blank">here</a> to add some timeslots or click <a href="{{ url_for('views.run_algo', email=email) }}" target="_blank">here</a> to generate your schedule!!
+            </form>
+        </section>
+        <section float="left">
+              <script>
+                /* When the user clicks on the button, 
+                toggle between hiding and showing the dropdown content */
+                function myFunction() {
+                  document.getElementById("myDropdown").classList.toggle("show");
+                }
+                
+                // Close the dropdown if the user clicks outside of it
+                window.onclick = function(event) {
+                  if (!event.target.matches('.dropbtn')) {
+                    var dropdowns = document.getElementsByClassName("dropdown-content");
+                    var i;
+                    for (i = 0; i < dropdowns.length; i++) {
+                      var openDropdown = dropdowns[i];
+                      if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                      }
+                    }
+                  }
+                }
+                </script>
+            <div class="list">    
+                <h1>Assignments list</h1><br>
+                <ul>
+                    {% for assign in data %}
+                    <div class="dropdown">
+                        <button onclick="myFunction()" class="dropbtn">{{ assign["name"] }}</button>
+                        <div id="myDropdown" class="dropdown-content">
+                            {% for slots in assign["timeslots"] %}
+                        <a>from <b>{{ slots["startTime"].split(' ')[1][:5] }}</b> to <b>{{ slots["endTime"].split(' ')[1][:5] }}</b> on <b>{{ slots["startTime"].split(' ')[0] }}</b></a>
+                        {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </ul>
+            </div>
+        </section>        
+        
+    </body>
+</html>

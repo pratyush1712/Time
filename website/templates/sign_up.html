@@ -1,0 +1,70 @@
+<head>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<section class="home">
+  <form id ="my-form" method="POST">
+    <h3 align="center">Sign Up</h3>
+    <div class="form-group">
+      <label for="email">Email Address</label>
+      <input
+        type="email"
+        class="form-control"
+        id="email"
+        name="email"
+        placeholder="Enter email"
+      />
+    </div>
+    <div class="form-group">
+      <label for="firstName">First Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="firstName"
+        name="firstName"
+        placeholder="Enter first name"
+      />
+    </div>
+    <div class="form-group">
+      <label for="password1">Password</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password1"
+        name="password1"
+        placeholder="Enter password"
+      />
+    </div>
+    <div class="form-group">
+      <label for="password2">Password (Confirm)</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password2"
+        name="password2"
+        placeholder="Confirm password"
+      />
+    </div>
+    <div class="form-group">
+      <label for="maxFocusTime">Maximum Focus Time (in hours)</label>
+      <input
+      type="number"
+      class="form-control"
+      id="maxFocusTime"
+      name="maxFocusTime"
+      placeholder="Maximum Focus Time"
+      >
+    </div>
+    <div class="form-group">
+      <label for="preferedWorkTime">Prefered Work Time (day/night)</label>
+      <input
+      type="number"
+      class="form-control"
+      id="preferedWorkTime"
+      name="preferedWorkTime"
+      placeholder="Prefered Work Time"
+      >
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</section>
