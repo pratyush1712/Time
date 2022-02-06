@@ -1,8 +1,5 @@
-Application\website\_pycache_
 /sqlite3.exe
 /venv
 Application\website\__pycache__
 scheduler.db
-Application\website\model.py
-Application\website\modeltest.py
 client_id.json
