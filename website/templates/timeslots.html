@@ -5,14 +5,36 @@
         <meta name="viewport" content="width=device-width, initial-scales=1.0" />
         <title>Timeslots</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+        <script>
+            var links = document.getElementsByTagName("a"),
+            i = 0, l = links.length,
+            body = document.body;
+
+            for(;i<l;i++) {
+                links[i].addEventListener("click",function(){
+                    body.className = "page-loading";
+                    setTimeout(function(){
+                        body.className = "";
+                    },3000);
+                },false);
+            }
+
+            window.addEventListener("beforeunload",function(e){
+                document.body.className = "page-loading";
+            },false);
+        </script>
     </head>
     <body>
         <header>
             <h1>Your available timeslots</h1>
+            <h3 class = "side-objects">
+                <a href="/" style="text-decoration: none; padding: 1rem; color:black">Home</a>
+                <a href="/profile" style="text-decoration: none; padding: 1rem; color:black">Profile</a>
+            </h3>    
         </header>
         <section class="container">
             <form id ="my-form" method='post'>
-                <h1>Tell us when you are free</h1>
+                <h1>Tell us what time you are free</h1>
                 <div class="msg"></div>
                 <div>
                     <label for="startTime">Start Time: </label>
@@ -23,14 +45,13 @@
                     <input type="datetime-local" required="required" name="endTime" placeholder="Endtime">            
                   </div>
                 <input class="btn" type="submit" value="Add">
-                done? click <a href="/api/run" target="_blank">here</a> to generate your schedule!!
+                done? click <a href="{{ url_for('views.run_algo') }}" target="_blank">here</a> to generate your schedule!!
             </form>
-            
         </section>
         
         
         <section class="list">
-            <h1>List of Pomodoro sessions:</h1>
+            <h1>List of work sessions:</h1>
             <ul>
                 {%for slots in data %}
                 <li>

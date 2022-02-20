@@ -9,6 +9,10 @@
     <body>
         <header>
             <h1>Your todo list</h1>
+            <h3 class = "side-objects">
+                <a href="/" style="text-decoration: none; padding: 1rem; color:black">Home</a>
+                <a href="/profile" style="text-decoration: none; padding: 1rem; color:black">Profile</a>
+            </h3>
         </header>
         <section class="container">
             <form id ="my-form" method='post'>
@@ -30,7 +34,7 @@
                     <input type="number" name="priority" required="required">
                 </div>
                 <input class="btn" type="submit" value="Add">
-                done? click <a href="{{ url_for('views.timeslots', email=email) }}" target="_blank">here</a> to add some timeslots or click <a href="{{ url_for('views.run_algo', email=email) }}" target="_blank">here</a> to generate your schedule!!
+                done? click <a href="{{ url_for('views.timeslots') }}" target="_blank">here</a> to add some timeslots or click <a href="{{ url_for('views.run_algo') }}" target="_blank">here</a> to generate your schedule!!
             </form>
         </section>
         <section float="left">

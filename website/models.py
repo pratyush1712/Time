@@ -42,6 +42,7 @@ class User(db.Model, UserMixin):
         return {
             "id": self.id,
             "name": self.name,
+            "email": self.email,
             "maxFocusTime": (self.maxFocusTime),
             "preferedWorkTime": (self.preferedWorkTime),
             "assignments": [a.sub_serialize() for a in self.assignments],

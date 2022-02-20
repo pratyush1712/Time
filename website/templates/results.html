@@ -9,8 +9,15 @@
         </title>
     </head>
     <body>
+        <header>
+            <h1>Your generated schedule</h1>
+            <h3 class = "side-objects">
+                <a href="/" style="padding: 1rem; color:black">Home</a>
+                <a href="/profile" style="text-decoration: none; padding: 1rem; color:black">Profile</a>
+                <a href="/export" style="text-decoration: none; padding: 1rem; color:black">Export to gCal</a>
+            </h3>    
+        </header>
         <section class="results">
-            <h1>Results</h1>
             <ul>
                 {% for assign in data %}
                 <li class='myDiv'>

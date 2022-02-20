@@ -77,9 +77,10 @@ def runAssign(assignments, timeslots, user):
 
     # update the db
     if status == pywraplp.Solver.OPTIMAL:
-        for aID in range(1,(num_assignments)+1):
-            for sID in range(1,(num_slots)+1):
+        for aID in range(1,(num_assignments)):
+            for sID in range(1,(num_slots)):
                 if x[aID,sID].solution_value() == 1:
+                    print(aID,sID)
                     slot = Timeslot.query.filter_by(id=sID).first()
                     slot.assignment = aID
                     db.session.commit()

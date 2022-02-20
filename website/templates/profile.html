@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Profile</title>
+        <meta charset="utf8">
+        <meta name="viewport" content="width=device-width, initial-scales=1.0">
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+        
+        <!-- <link rel="stylesheet" href="style.css"> -->
+    </head>
+    <body>
+        <header>
+            <h1> Hey, {{ data['name'] }}!!</h1>
+        </header>
+        <section class="home">
+            <form id ="my-form" method="POST">
+                <div class="form-group">
+                    <a href="/" style="text-decoration: none; padding: 1rem; color:black">Return home</a>
+                </div>
+                <div class="form-group">
+                <label for="email">Email Address</label>
+                <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    name="email"
+                    placeholder="Enter email"
+                    required="required"
+                    value="{{ data['email'] }}"
+                />
+                </div>
+                <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="firstName"
+                    name="name"
+                    placeholder="Enter first name"
+                    required="required"
+                    value="{{ data['name'] }}"
+                />
+                </div>
+                <div class="form-group">
+                <label for="maxFocusTime">Maximum Focus Time (in hours)</label>
+                <input
+                type="number"
+                class="form-control"
+                id="maxFocusTime"
+                name="maxFocusTime"
+                placeholder="Maximum Focus Time"
+                required="required"
+                value="{{ data['maxFocusTime'] }}"
+                >
+                </div>
+                <div class="form-group">
+                <label for="preferedWorkTime">Prefered Work Time (day/night)</label>
+                {% if data['preferedWorkTime'] == 1 %}
+                    <input
+                    type="text"
+                    class="form-control"
+                    id="preferedWorkTime"
+                    name="preferedWorkTime"
+                    placeholder="Prefered Work Time"
+                    value="night"
+                    >
+                {% else %}
+                    <input
+                    type="text"
+                    class="form-control"
+                    id="preferedWorkTime"
+                    name="preferedWorkTime"
+                    placeholder="Prefered Work Time"
+                    value="day"
+                    >
+                {% endif %}
+                </div>
+                <br />
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </section>

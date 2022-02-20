@@ -87,20 +87,25 @@ def timebreak(startTime, endTime, user):
 @views.route("/")
 @login_required
 def init():
-    return render_template("home.html",email=current_user.email, name=current_user.name)
+    return render_template("home.html", name=current_user.name)
 
-@views.route("/<email>", methods=['GET','POST'])
+@views.route("/profile", methods=['GET','POST'])
 @login_required
-def profile(email):
-    user = User.query.filter_by(email=email).first()
+def profile():
+    user = User.query.filter_by(email=current_user.email).first()
     if request.method == 'POST':
+        name = request.form.get("name")
+        email = request.form.get("email")
         maxFocusTime = request.form.get("maxFocusTime")
-        preferedWorkTime = request.form.get("preferedWorkTime")
+        preferedWorkTime = 1 if request.form.get("preferedWorkTime")=='night' else 0
         user.preferedWorkTime=preferedWorkTime
         user.maxFocusTime = maxFocusTime
+        user.name = name
+        user.email = email
         db.session.commit()
-        return render_template('home.html', data=user.serialize())
-    return render_template('user-info.html', data=user.serialize())
+        print(user.serialize())
+        return render_template('profile.html', data=user.serialize())
+    return render_template('profile.html', data=user.serialize())
 
 def credentials_to_dict(credentials):
     return {'token': credentials.token,
@@ -110,9 +115,10 @@ def credentials_to_dict(credentials):
             'client_secret': credentials.client_secret,
             'scopes': credentials.scopes}
 
-@views.route("/<email>/timeslots/", methods=['GET','POST'])
-def timeslots(email):
-    user = User.query.filter_by(email=email).first()
+@views.route("/timeslots/", methods=['GET','POST'])
+@login_required
+def timeslots():
+    user = User.query.filter_by(email=current_user.email).first()
     if request.method == 'POST':
         startTime = request.form.get("startTime")
         endTime = request.form.get("endTime")
@@ -130,12 +136,13 @@ def timeslots(email):
                 minute=int((endTime.split('T')[1]).split(':')[1])
             )), user)
         if Timeslot.query.filter_by(user=user.id).first() is not None:
-            return render_template("timeslots.html",data = [t.jserialize() for t in Timeslot.query.filter_by(user=user.id)], asn = [a.JsonizableSerialize() for a in Assignment.query.filter_by(user=user.id)], email=email)
-    return render_template("timeslots.html", data = [t.jserialize() for t in Timeslot.query.filter_by(user=user.id)], email=email)
+            return render_template("timeslots.html",data = [t.jserialize() for t in Timeslot.query.filter_by(user=user.id)], asn = [a.JsonizableSerialize() for a in Assignment.query.filter_by(user=user.id)])
+    return render_template("timeslots.html", data = [t.jserialize() for t in Timeslot.query.filter_by(user=user.id)])
 
-@views.route("/<email>/assignments/", methods=['GET','POST', 'DELETE'])
-def assignment(email):
-    user = User.query.filter_by(email=email).first()
+@views.route("/assignments/", methods=['GET','POST', 'DELETE'])
+@login_required
+def assignment():
+    user = User.query.filter_by(email=current_user.email).first()
     if request.method == 'POST':
         #body = json.loads(request.data)
         duedate = request.form.get("duedate")
@@ -158,8 +165,8 @@ def assignment(email):
         )
         db.session.add(new_assignment)
         db.session.commit()
-        return render_template("assignment.html", data = [a.JsonizableSerialize() for a in Assignment.query.filter_by(user=user.id)], email=email)
-    return render_template("assignment.html", data = [a.JsonizableSerialize() for a in Assignment.query.filter_by(user=user.id)], email=email)
+        return render_template("assignment.html", data = [a.JsonizableSerialize() for a in Assignment.query.filter_by(user=user.id)])
+    return render_template("assignment.html", data = [a.JsonizableSerialize() for a in Assignment.query.filter_by(user=user.id)])
 
 
 def valid_credentials(email):
@@ -201,7 +208,7 @@ def oauth2callback():
         auth_code = flask.request.args.get('code')
         credentials = flow.step2_exchange(auth_code)
         flask.session[f'{current_user.email} credentials'] = credentials.to_json()
-        return flask.redirect(flask.url_for('views.run_algo', email=current_user.email))
+        return flask.redirect(flask.url_for('views.export', email=current_user.email))
 
 def get_gcal_service(credentials):
     """
@@ -218,16 +225,67 @@ def get_gcal_service(credentials):
     return service
 
 # route to run the algo
-@views.route("/<email>/run", methods=['GET'])
-def run_algo(email):
-    user = User.query.filter_by(email=email).first()
-    credentials = valid_credentials(email)
+@views.route("/run", methods=['GET'])
+@login_required
+def run_algo():
+    user = User.query.filter_by(email=current_user.email).first()
+    # credentials = valid_credentials(current_user.email)
+    # if not credentials:
+    #     return flask.redirect(flask.url_for('views.oauth2callback',_external=True,_scheme="http"))
+    # service = get_gcal_service(credentials)
+    assignments = [a.serialize() for a in Assignment.query.filter_by(user=user.id)]
+    timeslots = [t.serialize() for t in Timeslot.query.filter_by(user=user.id)]
+    print(timeslots)
+    model.runAssign(assignments, timeslots,user)
+    finalizedSlots = [t.jserialize() for t in Timeslot.query.filter_by(user=user.id)]
+    print(finalizedSlots)
+    # settings = service.settings().list().execute()
+    # timezone='Asia/Kolkata'
+    # for settinfs in settings['items']:
+    #     if settinfs['id'] == 'timezone':
+    #         timezone=settinfs["value"]  
+    # plus = pytz.timezone(timezone)
+    # assignments = [a.JsonizableSerialize() for a in Assignment.query.filter_by(user=user.id)]
+    # plus = datetime.now(plus)
+    # plus=str(plus)
+    # print(assignments)
+    # for slots in finalizedSlots:
+    #     if slots["assignment"] is not None:
+    #         assignmentId = slots['assignment']
+    #         event = {
+    #             'summary': assignments[assignmentId-1].get("name"),
+    #             'start': {
+    #                 'dateTime': dateit(slots.get("startTime"),plus),
+    #                 'timezone': timezone
+    #             },
+    #             'end': {
+    #                 'dateTime': dateit(slots["endTime"],plus),
+    #                 'timezone': timezone
+    #             }
+    #         }
+    #         print(event)
+    #         event = service.events().insert(calendarId='primary', body=event).execute()
+    # rep = (credentials.to_json())
+    # rep=json.loads(rep)
+    # token = (rep.get("access_token"))
+    #requests.post('https://oauth2.googleapis.com/revoke',
+    #params={'token': token},
+    #headers = {'content-type': 'application/x-www-form-urlencoded'})
+    #flask.session.clear()
+    return render_template('results.html', data=[a.JsonizableSerialize() for a in Assignment.query.filter_by(user=user.id)])
+
+@views.route('/googleb9f9364d29bffe94.html')
+def verify():
+    return render_template('googleb9f9364d29bffe94.html')
+
+@views.route('/export')
+@login_required
+def export():
+    user = User.query.filter_by(email=current_user.email).first()
+    credentials = valid_credentials(current_user.email)
     if not credentials:
         return flask.redirect(flask.url_for('views.oauth2callback',_external=True,_scheme="https"))
     service = get_gcal_service(credentials)
-    assignments = [a.serialize() for a in Assignment.query.filter_by(user=user.id)]
-    timeslots = [t.serialize() for t in Timeslot.query.filter_by(user=user.id)]
-    model.runAssign(assignments, timeslots,user)
     finalizedSlots = [t.jserialize() for t in Timeslot.query.filter_by(user=user.id)]
     settings = service.settings().list().execute()
     timezone='Asia/Kolkata'
@@ -239,10 +297,13 @@ def run_algo(email):
     plus = datetime.now(plus)
     plus=str(plus)
     print(assignments)
+    print(finalizedSlots)
     for slots in finalizedSlots:
-        print(slots["assignment"])
         if slots["assignment"] is not None:
+            print('slots'+str(slots['assignment']))
             assignmentId = slots['assignment']
+            print(dateit(slots.get("startTime"),plus))
+            print(assignmentId-1)
             event = {
                 'summary': assignments[assignmentId-2].get("name"),
                 'start': {
@@ -258,17 +319,8 @@ def run_algo(email):
             event = service.events().insert(calendarId='primary', body=event).execute()
     rep = (credentials.to_json())
     rep=json.loads(rep)
-    token = (rep.get("access_token"))
-    #requests.post('https://oauth2.googleapis.com/revoke',
-    #params={'token': token},
-    #headers = {'content-type': 'application/x-www-form-urlencoded'})
-    #flask.session.clear()
-    return render_template('results.html', data=[a.JsonizableSerialize() for a in Assignment.query.filter_by(user=user.id)])
-
-@views.route('/googleb9f9364d29bffe94.html')
-def verify():
-    return render_template('googleb9f9364d29bffe94.html')
-
+    return flask.redirect('https://calendar.google.com/calendar/')
+    #return render_template('exported.html', data=user.serialize())
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
