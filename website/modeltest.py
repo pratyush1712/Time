@@ -4,6 +4,7 @@ from math import ceil
 from random import randint
 
 
+# The above code is creating a sample database for us to work with.
 sample_database = {
     "assignments": [{
         "id": 1,

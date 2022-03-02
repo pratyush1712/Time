@@ -52,6 +52,11 @@ API_VERSION = 'v3'
 # key. See https://flask.palletsprojects.com/quickstart/#sessions.
 
 def dateit(date, plus):
+    """
+    :param date: The date and time you want to convert
+    :param plus: The number of days to add to the date
+    :return: a string that is the date and time in the format of the Azure SQL Data Warehouse.
+    """
     # from 2022-01-17 09:59:00 to 2015-05-28T09:00:00-07:00
     sign = ''
     for char in (plus.split(":")[2])[2:]:
@@ -59,6 +64,15 @@ def dateit(date, plus):
     return date.split(' ')[0] + 'T' + date.split(' ')[1]+str(sign)
 
 def timebreak(startTime, endTime, user):
+    """
+    The function takes in the start time and end time of a user's session and creates a number of blocks
+    of time equal to the number of blocks of time the user has specified.
+    
+    :param startTime: the start time of the day
+    :param endTime: the end time of the day
+    :param user: the user object
+    :return: The response is a list of dictionaries, each dictionary representing a timeslot.
+    """
     # the response of the query
     resp = []
     # calculate the number of blocks required
@@ -92,6 +106,10 @@ def init():
 @views.route("/profile", methods=['GET','POST'])
 @login_required
 def profile():
+    """
+    This function is used to update the user profile
+    :return: The profile page is being returned.
+    """
     user = User.query.filter_by(email=current_user.email).first()
     if request.method == 'POST':
         name = request.form.get("name")
@@ -108,6 +126,13 @@ def profile():
     return render_template('profile.html', data=user.serialize())
 
 def credentials_to_dict(credentials):
+    """
+    Converts a Credentials object to a Python dictionary
+    
+    :param credentials: The credentials obtained from the client_secret_json_path and the
+    client_secret_json_path
+    :return: a dictionary of the credentials.
+    """
     return {'token': credentials.token,
             'refresh_token': credentials.refresh_token,
             'token_uri': credentials.token_uri,
@@ -118,6 +143,10 @@ def credentials_to_dict(credentials):
 @views.route("/timeslots/", methods=['GET','POST'])
 @login_required
 def timeslots():
+    """
+    This function is used to create a timeslot for a user.
+    :return: A JSON object with the timeslots and assignments.
+    """
     user = User.query.filter_by(email=current_user.email).first()
     if request.method == 'POST':
         startTime = request.form.get("startTime")
@@ -142,6 +171,10 @@ def timeslots():
 @views.route("/assignments/", methods=['GET','POST', 'DELETE'])
 @login_required
 def assignment():
+    """
+    This function is used to create a new assignment. 
+    :return: A list of all the assignments that are associated with the user.
+    """
     user = User.query.filter_by(email=current_user.email).first()
     if request.method == 'POST':
         #body = json.loads(request.data)
@@ -200,7 +233,7 @@ def oauth2callback():
     flow =  client.flow_from_clientsecrets(
         CLIENT_SECRET_FILE,
         scope= SCOPES,
-        redirect_uri=flask.url_for('views.oauth2callback', _external=True,_scheme="https"))
+        redirect_uri=flask.url_for('views.oauth2callback', _external=True,_scheme="http"))
     if 'code' not in flask.request.args:
         auth_uri = flow.step1_get_authorize_url()
         return flask.redirect(auth_uri)
@@ -228,6 +261,13 @@ def get_gcal_service(credentials):
 @views.route("/run", methods=['GET'])
 @login_required
 def run_algo():
+    """
+    This function is called when the user clicks the run algorithm button. 
+    It calls the runAssign function from the model.py file. 
+    The runAssign function takes in the assignments and timeslots and runs the algorithm. 
+    The finalized slots are then stored in the database.
+    :return: The final assignments are being returned.
+    """
     user = User.query.filter_by(email=current_user.email).first()
     # credentials = valid_credentials(current_user.email)
     # if not credentials:
@@ -235,11 +275,9 @@ def run_algo():
     # service = get_gcal_service(credentials)
     assignments = [a.serialize() for a in Assignment.query.filter_by(user=user.id)]
     timeslots = [t.serialize() for t in Timeslot.query.filter_by(user=user.id)]
-    print(timeslots)
+    #print(timeslots)
     model.runAssign(assignments, timeslots,user)
-    finalizedSlots = [t.jserialize() for t in Timeslot.query.filter_by(user=user.id)]
-    print(finalizedSlots)
-    # settings = service.settings().list().execute()
+    print([a.JsonizableSerialize() for a in Assignment.query.filter_by(user=user.id)])# settings = service.settings().list().execute()
     # timezone='Asia/Kolkata'
     # for settinfs in settings['items']:
     #     if settinfs['id'] == 'timezone':
@@ -281,10 +319,14 @@ def verify():
 @views.route('/export')
 @login_required
 def export():
+    """
+    This function is used to export the data from the database to the google calendar
+    :return: The user is being redirected to the calendar.
+    """
     user = User.query.filter_by(email=current_user.email).first()
     credentials = valid_credentials(current_user.email)
     if not credentials:
-        return flask.redirect(flask.url_for('views.oauth2callback',_external=True,_scheme="https"))
+        return flask.redirect(flask.url_for('views.oauth2callback',_external=True,_scheme="http"))
     service = get_gcal_service(credentials)
     finalizedSlots = [t.jserialize() for t in Timeslot.query.filter_by(user=user.id)]
     settings = service.settings().list().execute()
@@ -305,7 +347,7 @@ def export():
             print(dateit(slots.get("startTime"),plus))
             print(assignmentId-1)
             event = {
-                'summary': assignments[assignmentId-2].get("name"),
+                'summary': assignments[assignmentId-1].get("name"),
                 'start': {
                     'dateTime': dateit(slots.get("startTime"),plus),
                     'timezone': timezone

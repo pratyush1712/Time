@@ -7,7 +7,7 @@
     body {
       font-family: Arial, Helvetica, sans-serif;
       line-height: 1.6;
-      background: #bed16b;
+      background: #6bbdd1;
     }
 
     ul {
@@ -27,10 +27,10 @@
     }
 
     .container {
-      width: fit-content;
+      width: 500px;
       overflow: auto;
       padding: 2rem 2rem;
-      background: #9fd8ca;
+      background: #31a6f5;
       float: right;
 
     }
@@ -40,16 +40,16 @@
       height: fit-content;
       overflow: auto;
       padding: 2rem 2rem;
-      background: #9fd8ca;
+      background: #31a6f5;
     }
 
     .list {
       margin: auto;
-      width: 760px;
+      width: 650px;
       height: min-content;
       overflow: auto;
       padding: 2rem 2rem;
-      background: #dee75d;
+      background: #0945c7;
       float: left;
 
     }
@@ -59,7 +59,7 @@
       width: 900px;
       overflow: auto;
       padding: 2rem 2rem;
-      background: #dee75d;
+      background: #0945c7;
 
     }
 

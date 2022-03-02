@@ -10,6 +10,12 @@ auth = Blueprint('auth', __name__)
 @auth.route("/")
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
+    """
+    If the user is already logged in, redirect to the init page. If the user is not logged in, check if
+    the email and password match a user in the database. If they do, log the user in and redirect to the
+    init page. If they don't, flash an error message and redirect to the login page
+    :return: The rendered template of the login.html page.
+    """
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
@@ -32,12 +38,20 @@ def login():
 @auth.route('/logout')
 @login_required
 def logout():
+    """
+    Logs out the current user and redirects to the login page
+    :return: a redirect to the login page.
+    """
     logout_user()
     return redirect(url_for('auth.login'))
 
 
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
+    """
+    It creates a new user in the database and logs them in.
+    :return: The sign_up.html template is being returned.
+    """
     if request.method == 'POST':
         email = request.form.get('email')
         first_name = request.form.get('firstName')

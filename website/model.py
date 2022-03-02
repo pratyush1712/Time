@@ -7,7 +7,6 @@ from random import randint
 
 
 def runAssign(assignments, timeslots, user):
-    # required
     INITIAL_COST = 20
     PREFERED_TIME_DECREMENT = 5
     PRIORITY_DECREMENT = int(1/9*INITIAL_COST)
@@ -61,9 +60,8 @@ def runAssign(assignments, timeslots, user):
     # 2. The number of slots alloted to an assignment is greater than the demand
     for aID in range(1,(len(assignments))+1):
         time = assignments[aID-1]["amtOfTime"].seconds//60
-        print(time)
         solver.Add(solver.Sum([x[aID, sID]*((timeslots[sID-1]["endTime"]-timeslots[sID-1]["startTime"]).seconds//60) for sID in range(1,(num_slots)+1)]) >= time)
-        solver.Add(solver.Sum([x[aID, sID]*((timeslots[sID-1]["endTime"]-timeslots[sID-1]["startTime"]).seconds//60) for sID in range(1,(num_slots)+1)]) <= user.maxFocusTime*2*time)
+        solver.Add(solver.Sum([x[aID, sID]*((timeslots[sID-1]["endTime"]-timeslots[sID-1]["startTime"]).seconds//60) for sID in range(1,(num_slots)+1)]) <= int(user.maxFocusTime*3*time))
     
     # objective function
     obj = []
@@ -74,18 +72,16 @@ def runAssign(assignments, timeslots, user):
 
     # invoke the solver
     status = solver.Solve()
-
     # update the db
     if status == pywraplp.Solver.OPTIMAL:
         for aID in range(1,(num_assignments)):
             for sID in range(1,(num_slots)):
                 if x[aID,sID].solution_value() == 1:
                     print(aID,sID)
-                    slot = Timeslot.query.filter_by(id=sID).first()
-                    slot.assignment = aID
+                    slot = Timeslot.query.filter_by(id=timeslots[sID-1].get("id")).first()
+                    slot.assignment = assignments[aID-1].get("id")
                     db.session.commit()
     
-        
         # for aID in all_assignments:
         #     for sID in all_slots:
         #         if x[aID, sID].solution_value() == 1:
