@@ -61,7 +61,7 @@ def runAssign(assignments, timeslots, user):
     for aID in range(1,(len(assignments))+1):
         time = assignments[aID-1]["amtOfTime"].seconds//60
         solver.Add(solver.Sum([x[aID, sID]*((timeslots[sID-1]["endTime"]-timeslots[sID-1]["startTime"]).seconds//60) for sID in range(1,(num_slots)+1)]) >= time)
-        solver.Add(solver.Sum([x[aID, sID]*((timeslots[sID-1]["endTime"]-timeslots[sID-1]["startTime"]).seconds//60) for sID in range(1,(num_slots)+1)]) <= int(user.maxFocusTime*3*time))
+        solver.Add(solver.Sum([x[aID, sID]*((timeslots[sID-1]["endTime"]-timeslots[sID-1]["startTime"]).seconds//60) for sID in range(1,(num_slots)+1)]) <= (user.maxFocusTime*60+time))
     
     # objective function
     obj = []

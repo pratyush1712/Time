@@ -233,7 +233,7 @@ def oauth2callback():
     flow =  client.flow_from_clientsecrets(
         CLIENT_SECRET_FILE,
         scope= SCOPES,
-        redirect_uri=flask.url_for('views.oauth2callback', _external=True,_scheme="http"))
+        redirect_uri=flask.url_for('views.oauth2callback', _external=True,_scheme="https"))
     if 'code' not in flask.request.args:
         auth_uri = flow.step1_get_authorize_url()
         return flask.redirect(auth_uri)
@@ -326,7 +326,7 @@ def export():
     user = User.query.filter_by(email=current_user.email).first()
     credentials = valid_credentials(current_user.email)
     if not credentials:
-        return flask.redirect(flask.url_for('views.oauth2callback',_external=True,_scheme="http"))
+        return flask.redirect(flask.url_for('views.oauth2callback',_external=True,_scheme="https"))
     service = get_gcal_service(credentials)
     finalizedSlots = [t.jserialize() for t in Timeslot.query.filter_by(user=user.id)]
     settings = service.settings().list().execute()
