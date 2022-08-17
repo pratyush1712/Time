@@ -3,3 +3,5 @@
 Application\website\__pycache__
 scheduler.db
 client_id.json
+__pycache__
+pyvenv.cfg
