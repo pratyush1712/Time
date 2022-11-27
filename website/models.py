@@ -2,7 +2,6 @@ from . import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func
 
-
 from datetime import datetime, timedelta
 from enum import unique
 from flask_sqlalchemy import SQLAlchemy
@@ -11,10 +10,6 @@ import hashlib
 import os
 
 from flask_login import UserMixin
-
-# @login_manager.user_loader
-# def get_user(ident):
-#   return User.query.get(int(ident))
 
 class User(db.Model, UserMixin):
     __tablename__ = 'user'
@@ -135,20 +130,3 @@ class Timeslot(db.Model):
             "endTime": str(self.endTime),
             "user": self.user,
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
