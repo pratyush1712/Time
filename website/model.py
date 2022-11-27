@@ -10,15 +10,12 @@ def runAssign(assignments, timeslots, user):
     INITIAL_COST = 20
     PREFERED_TIME_DECREMENT = 5
     PRIORITY_DECREMENT = int(1/9*INITIAL_COST)
-
-
-
+    
     # data
     num_assignments = len(assignments)+1
     num_slots = len(timeslots)
     all_slots = range(num_slots)
     all_assignments = range(len(assignments))
-    
     
     # cost table
     costs = []
@@ -46,6 +43,7 @@ def runAssign(assignments, timeslots, user):
     
     # Create the mip solver with the SCIP backend
     solver = pywraplp.Solver.CreateSolver('SCIP')
+    
     # create the variables
     x = {}
     for aID in range(1,(num_assignments)+1):
@@ -81,15 +79,12 @@ def runAssign(assignments, timeslots, user):
                     slot = Timeslot.query.filter_by(id=timeslots[sID-1].get("id")).first()
                     slot.assignment = assignments[aID-1].get("id")
                     db.session.commit()
-    
-        # for aID in all_assignments:
-        #     for sID in all_slots:
-        #         if x[aID, sID].solution_value() == 1:
-        #             timeslots[sID]["assignment"] = aID
-        #             assignments[aID]["timeslots"].append(sID)
 
-def run(assignments, timeslots):
+def runTest(assignments, timeslots):
     """
+    Testing v1...
+    
+    Types:
     assignments = list of dictionaries of the form:
     {
         "id": xyz,
@@ -162,9 +157,3 @@ def run(assignments, timeslots):
                 slot = Timeslot.query.filter_by(id=s).first()
                 slot.assignment = a
                 db.session.commit()
-                
-    
-
-    # additional constraint for nurse solver
-        # the sum of all timeslots for an assignment has to be greater that the amount of time expected to complete that assignment
-        # the endTime of the last timeslots alloted to an assignment has to be before the duedate of the assignment
