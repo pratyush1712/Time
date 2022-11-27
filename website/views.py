@@ -4,7 +4,6 @@ from . import db
 import json
 import sys
 from website import model
-#sys.path.append('D:\flask\Flask-Web-App-Tutorial\website\model.py') #folder which contains model, snn etc.,
 
 views = Blueprint('views', __name__)
 
@@ -32,24 +31,11 @@ from oauth2client import client
 import httplib2   # used in oauth2 flow
 from apiclient import discovery
 
-
-
-
-# This variable specifies the name of a file that contains the OAuth 2.0
-# information for this application, including its client_id and client_secret.
-#CLIENT_SECRETS_FILE = "client_secret.json"
 CLIENT_SECRET_FILE = 'client_id.json'  ## You'll need this
 
-# This OAuth 2.0 access scope allows for full read/write access to the
-# authenticated user's account and requires requests to use an SSL connection.
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 API_SERVICE_NAME = 'calendar'
 API_VERSION = 'v3'
-
-
-# Note: A secret key is included in the sample so that it works.
-# If you use this code in your application, replace this with a truly secret
-# key. See https://flask.palletsprojects.com/quickstart/#sessions.
 
 def dateit(date, plus):
     """
@@ -121,7 +107,6 @@ def profile():
         user.name = name
         user.email = email
         db.session.commit()
-        print(user.serialize())
         return render_template('profile.html', data=user.serialize())
     return render_template('profile.html', data=user.serialize())
 
