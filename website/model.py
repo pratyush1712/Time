@@ -5,7 +5,6 @@ from .models import Assignment, Timeslot
 from math import ceil
 from random import randint
 
-
 def runAssign(assignments, timeslots, user):
     INITIAL_COST = 20
     PREFERED_TIME_DECREMENT = 5
