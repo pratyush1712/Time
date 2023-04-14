@@ -5,7 +5,6 @@ from .models import Assignment, Timeslot
 from math import ceil
 from random import randint
 
-
 def runAssign(assignments, timeslots, user):
     INITIAL_COST = 20
     PREFERED_TIME_DECREMENT = 5
@@ -111,7 +110,6 @@ def runAssign(assignments, timeslots, user):
                     ).first()
                     slot.assignment = assignments[aID - 1].get("id")
                     db.session.commit()
-
 
 def runTest(assignments, timeslots):
     """

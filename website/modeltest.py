@@ -3,7 +3,6 @@ import datetime
 from math import ceil
 from random import randint
 
-
 # The above code is creating a sample database for us to work with.
 sample_database = {
     "assignments": [
@@ -237,7 +236,6 @@ sample_database = {
     ],
 }
 
-
 def runAssign(assignments, timeslots):
     # data
     num_assignments = len(assignments)
@@ -298,7 +296,6 @@ def runAssign(assignments, timeslots):
                 if x[aID, sID].solution_value() == 1:
                     timeslots[sID]["assignment"] = aID
                     assignments[aID]["timeslots"].append(sID)
-
 
 def run(assignments, timeslots):
     """
@@ -369,7 +366,6 @@ def run(assignments, timeslots):
     # additional constraint for nurse solver
     # the sum of all timeslots for an assignment has to be greater that the amount of time expected to complete that assignment
     # the endTime of the last timeslots alloted to an assignment has to be before the duedate of the assignment
-
 
 if __name__ == "__main__":
     # run the LP on the sample database

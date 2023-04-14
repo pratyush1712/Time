@@ -1,77 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-        
-        <meta charset="utf8">
-        <meta name="viewport" content="width=device-width, initial-scales=1.0" />
-        <title>Timeslots</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-        <script>
-            var links = document.getElementsByTagName("a"),
+
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <meta charset="utf8">
+    <meta name="viewport" content="width=device-width, initial-scales=1.0" />
+    <title>Timeslots</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <script>
+        var links = document.getElementsByTagName("a"),
             i = 0, l = links.length,
             body = document.body;
 
-            for(;i<l;i++) {
-                links[i].addEventListener("click",function(){
-                    body.className = "page-loading";
-                    setTimeout(function(){
-                        body.className = "";
-                    },3000);
-                },false);
-            }
+        for (; i < l; i++) {
+            links[i].addEventListener("click", function () {
+                body.className = "page-loading";
+                setTimeout(function () {
+                    body.className = "";
+                }, 3000);
+            }, false);
+        }
 
-            window.addEventListener("beforeunload",function(e){
-                document.body.className = "page-loading";
-            },false);
-        </script>
-    </head>
-    <body>
-        <header>
-            <h1>Your available timeslots</h1>
-            <h3 class = "side-objects">
-                <a href="/" style="text-decoration: none; padding: 1rem; color:black">Home</a>
-                <a href="/profile" style="text-decoration: none; padding: 1rem; color:black">Profile</a>
-            </h3>    
-        </header>
-        <section class="container">
-            <form id ="my-form" method='post'>
-                <h1>Tell us what time you are free</h1>
-                <div class="msg"></div>
+        window.addEventListener("beforeunload", function (e) {
+            document.body.className = "page-loading";
+        }, false);
+    </script>
+</head>
+
+<body>
+    <header>
+        <h1>Your available timeslots</h1>
+        <h3 class="side-objects">
+            <a href="/" style="text-decoration: none; padding: 1rem; color:black">Home</a>
+            <a href="/profile" style="text-decoration: none; padding: 1rem; color:black">Profile</a>
+        </h3>
+    </header>
+    <section class="container">
+        <form id="my-form" method='post'>
+            <h1>Tell us what time you are free</h1>
+            <div class="msg"></div>
+            <div>
+                <label for="startTime">Start Time: </label>
+                <input type="datetime-local" required="required" name="startTime" placeholder="Startime">
+            </div>
+            <div>
+                <label for="endTime">End Time:</label>
+                <input type="datetime-local" required="required" name="endTime" placeholder="Endtime">
+            </div>
+            <input class="btn" type="submit" value="Add">
+            done? click <a href="{{ url_for('views.run_algo') }}" target="_blank">here</a> to generate your schedule!!
+        </form>
+    </section>
+
+
+    <section class="list">
+        <h1>List of work sessions:</h1>
+        <ul>
+            {%for slots in data %}
+            <li>
                 <div>
-                    <label for="startTime">Start Time: </label>
-                    <input type = "datetime-local" required="required" name="startTime" placeholder="Startime">
+                    <h4>Start Time:</h4>{{ slots["startTime"] }}
                 </div>
                 <div>
-                    <label for="endTime">End Time:</label>
-                    <input type="datetime-local" required="required" name="endTime" placeholder="Endtime">            
-                  </div>
-                <input class="btn" type="submit" value="Add">
-                done? click <a href="{{ url_for('views.run_algo') }}" target="_blank">here</a> to generate your schedule!!
-            </form>
-        </section>
-        
-        
-        <section class="list">
-            <h1>List of work sessions:</h1>
-            <ul>
-                {%for slots in data %}
-                <li>
-                    <div>
-                        <h4>Start Time:</h4>{{ slots["startTime"] }}
-                    </div>
-                    <div>
-                        <h4>End Time:</h4>{{ slots["endTime"] }}
-                    </div>
-                    <div>
-                        <h4>Assignment Number:</h4>{{ slots["assignment"] }}
-                    </div>
+                    <h4>End Time:</h4>{{ slots["endTime"] }}
+                </div>
+                <div>
+                    <h4>Assignment Number:</h4>{{ slots["assignment"] }}
+                </div>
                 {% endfor %}
-                </li>
-            </ul>
-        </section>        
-    </body>
+            </li>
+        </ul>
+    </section>
+</body>
+
 </html>
