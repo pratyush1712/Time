@@ -43,8 +43,10 @@
                         {% for slots in assign["timeslots"] %}
                         <li>
                             <div id="slots">
-                                from <b>{{ slots["startTime"].split(' ')[1][:5] }}</b> to <b>{{ slots["endTime"].split('
-                                    ')[1][:5] }}</b> on <b>{{ slots["startTime"].split(' ')[0] }}</b>
+                                from <b>{{
+                                    slots["startTime"].split(" ")[1][:5] }}</b>to<b>
+                                    {{ slots["endTime"].split(" ")[1][:5]}}</b> on
+                                <b>{{ slots["startTime"].split(" ")[0] }}</b>
                             </div>
                             {% endfor %}
                         </li>
