@@ -5,3 +5,4 @@ scheduler.db
 client_id.json
 __pycache__
 pyvenv.cfg
+.vercel
