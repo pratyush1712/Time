@@ -1,5 +1,5 @@
 # Time Bite
-- Automate planning. It takes your tasks and projects. And builds the perfect daily schedule.
+Automate planning. It takes your tasks and projects. And builds the perfect daily schedule.
 
 ## Overview
 - The application automates time management and schedule making for the user based on their prefered work habits.
