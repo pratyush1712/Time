@@ -1,5 +1,3 @@
-[![Watch the video](https://i.imgur.com/ndIEWV7.jpg)](https://drive.google.com/file/d/1GveotFvEWfppnT9a7DG0Ar7NN-1whxPz/view?usp=sharing)<br>
-click on the image to view a demo
 ### Overview ###
 - The application automates time management and schedule making for the user based on their prefered work habits.
 - It asks user for their prefered study/work time and the number of hours they can spend working without losing focus.
@@ -17,4 +15,4 @@ click on the image to view a demo
 - Shared projects: The application enables the user to add members for group assignments. App would sync and create schedules for each members.
 - Close friends: The application enables the user to add their friends in their close friends list so that they can find shared free space in their calendar in which they can hangout.
 
-deployed on ("https://timebite.herokuapp.com/")
+website link: https://timebite.herokuapp.com/
