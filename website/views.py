@@ -37,6 +37,7 @@ SCOPES = ["https://www.googleapis.com/auth/calendar"]
 API_SERVICE_NAME = "calendar"
 API_VERSION = "v3"
 
+
 def dateit(date, plus):
     """
     :param date: The date and time you want to convert
@@ -48,6 +49,7 @@ def dateit(date, plus):
     for char in (plus.split(":")[2])[2:]:
         sign += char
     return date.split(" ")[0] + "T" + date.split(" ")[1] + str(sign)
+
 
 def timebreak(startTime, endTime, user):
     """
@@ -94,10 +96,12 @@ def timebreak(startTime, endTime, user):
             index = 0
     return resp
 
+
 @views.route("/")
 @login_required
 def init():
     return render_template("home.html", name=current_user.name)
+
 
 @views.route("/profile", methods=["GET", "POST"])
 @login_required
@@ -120,6 +124,7 @@ def profile():
         return render_template("profile.html", data=user.serialize())
     return render_template("profile.html", data=user.serialize())
 
+
 def credentials_to_dict(credentials):
     """
     Converts a Credentials object to a Python dictionary
@@ -136,6 +141,7 @@ def credentials_to_dict(credentials):
         "client_secret": credentials.client_secret,
         "scopes": credentials.scopes,
     }
+
 
 @views.route("/timeslots/", methods=["GET", "POST"])
 @login_required
@@ -183,6 +189,7 @@ def timeslots():
         data=[t.jserialize() for t in Timeslot.query.filter_by(user=user.id)],
     )
 
+
 @views.route("/assignments/", methods=["GET", "POST", "DELETE"])
 @login_required
 def assignment():
@@ -229,6 +236,7 @@ def assignment():
         ],
     )
 
+
 def valid_credentials(email):
     """
     Returns OAuth2 credentials if we have valid
@@ -246,6 +254,7 @@ def valid_credentials(email):
     if credentials.invalid or credentials.access_token_expired:
         return None
     return credentials
+
 
 @views.route("/oauth2callback")
 @login_required
@@ -273,6 +282,7 @@ def oauth2callback():
         flask.session[f"{current_user.email} credentials"] = credentials.to_json()
         return flask.redirect(flask.url_for("views.export", email=current_user.email))
 
+
 def get_gcal_service(credentials):
     """
     We need a Google calendar 'service' object to obtain
@@ -286,6 +296,7 @@ def get_gcal_service(credentials):
     http_auth = credentials.authorize(httplib2.Http())
     service = discovery.build("calendar", "v3", http=http_auth)
     return service
+
 
 # route to run the algo
 @views.route("/run", methods=["GET"])
@@ -346,9 +357,11 @@ def run_algo():
         ],
     )
 
+
 @views.route("/googleb9f9364d29bffe94.html")
 def verify():
     return render_template("googleb9f9364d29bffe94.html")
+
 
 @views.route("/export")
 @login_required
@@ -361,7 +374,7 @@ def export():
     credentials = valid_credentials(current_user.email)
     if not credentials:
         return flask.redirect(
-            flask.url_for("views.oauth2callback", _external=True, _scheme="https")
+            flask.url_for("views.oauth2callback", _external=True, _scheme="http")
         )
     service = get_gcal_service(credentials)
     finalizedSlots = [t.jserialize() for t in Timeslot.query.filter_by(user=user.id)]
@@ -377,10 +390,11 @@ def export():
     plus = datetime.now(plus)
     plus = str(plus)
     for slots in finalizedSlots:
+        print(slots)
         if slots["assignment"] is not None:
             assignmentId = slots["assignment"]
             event = {
-                "summary": assignments[assignmentId - 1].get("name"),
+                "summary": assignments[assignmentId - 4].get("name"),
                 "start": {
                     "dateTime": dateit(slots.get("startTime"), plus),
                     "timezone": timezone,

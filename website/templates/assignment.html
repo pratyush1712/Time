@@ -83,8 +83,10 @@
                     <button onclick="myFunction()" class="dropbtn">{{ assign["name"] }}</button>
                     <div id="myDropdown" class="dropdown-content">
                         {% for slots in assign["timeslots"] %}
-                        <a>from <b>{{ slots["startTime"].split(' ')[1][:5] }}</b> to <b>{{ slots["endTime"].split('
-                                ')[1][:5] }}</b> on <b>{{ slots["startTime"].split(' ')[0] }}</b></a>
+                        <a>from <b>
+                                {{ slots["startTime"].split(' ')[1][:5] }}</b>
+                            to <b>{{ slots["endTime"].split(' ')[1][:5] }}</b> on <b>{{ slots["startTime"].split(' ')[0]
+                                }}</b></a>
                         {% endfor %}
                     </div>
                 </div>
